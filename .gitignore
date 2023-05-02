@@ -1,0 +1,10 @@
+# All type files with below extensions
+*.log
+*.txt
+
+# Directories
+__pycache__/
+venv/
+
+# play scripts
+test.py
