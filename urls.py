@@ -9,7 +9,8 @@ logger = logging.getLogger(__name__)
 class Urls:
     def __init__(self, clipboard_item):
         self.src_dest_urls = self.splitURLs(self.findURLs(clipboard_item))
-        self.total_found_urls: int = len(self.src_dest_urls)
+        if self.src_dest_urls:
+            self.total_found_urls: int = len(self.src_dest_urls)
         self.success_count:int = 0
         self.failed_count:int = 0
         self.removed_count: int = 0

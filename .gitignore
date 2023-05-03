@@ -5,6 +5,7 @@
 # Directories
 __pycache__/
 venv/
+.vscode
 
 # play scripts
 test.py

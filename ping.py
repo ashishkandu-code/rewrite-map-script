@@ -18,8 +18,11 @@ class Ping():
 
     def fetchURL(self, url: str) -> str:
         try:
-            res = requests.get(url)
-            return res.url
+            res = requests.get(url).url
+            # port address may be returned, hence removing from here
+            url_port_split = res.split(":443")
+            res = "".join(url_port_split)
+            return res
         except requests.exceptions.RequestException as err:
             raise SystemExit(err)
         
