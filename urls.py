@@ -24,6 +24,7 @@ class Urls:
     
     def increment_count(self, counter: int) -> int:
         counter = counter + 1
+        return counter
     
 
     def findURLs(self, string: str) -> List[str]:
@@ -63,5 +64,5 @@ class Urls:
     def remove_urls(self, from_to_entries):
         for entry in from_to_entries:
             self.src_dest_urls.remove(entry)
-            self.increment_count(self.removed_count)
+            self.removed_count = self.increment_count(self.removed_count)
             logger.debug(f"Removed {entry}")

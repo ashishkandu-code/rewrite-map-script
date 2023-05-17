@@ -163,5 +163,5 @@ if __name__ == "__main__":
     print(f'\nSummary')
     print(f'{"Total URLs found": <20}: {urls_obj.total_found_urls}')
     print(f'{"Bad URLs removed": <20}: {urls_obj.removed_count}')
-    print(f'{"URLs redirected": <20}: {urls_obj.removed_count}')
-    print(f'{"Redirection failed": <20}: {urls_obj.removed_count}')
+    print(f'{"URLs redirected": <20}: {urls_obj.success_count}')
+    print(f'{"Redirection failed": <20}: {urls_obj.failed_count}')
