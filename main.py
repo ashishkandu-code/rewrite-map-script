@@ -9,7 +9,7 @@ import sys
 import logging
 import os
 from datetime import datetime
-
+from termcolor import colored
 from mylogging import log_setup
 
 SLEEP_FOR: Final = .008
@@ -23,6 +23,8 @@ logger = logging.getLogger(__name__)
 # Creation of path in the current script directory
 curr_path = os.path.dirname(os.path.realpath(__file__))
 FORMATTED_OUTPUT: Final = os.path.join(curr_path, "output.txt")
+console_formatter: str = "*"
+console_formatter_count: int = 70
 
 # Create the file in current directory if not exist
 
@@ -90,7 +92,7 @@ if __name__ == "__main__":
     status_codes_to_urls = ping.getStatusCodeOfURLs(
         map(lambda x: x[1], src_dest_urls))  # Passing destination URLs
 
-    print(f"\nRunning destination URLs verification...")
+    print(f"\n{' Running destination URLs verification... ':{console_formatter}^{console_formatter_count}}")
     """
     Below code pings to url and check their status codes also verifies if reverse redirection is present to avoid
     infinite redirection. If destination url is further redirecting it will alert the same
@@ -99,20 +101,20 @@ if __name__ == "__main__":
     for (from_url, to_url), status_code in zip(src_dest_urls, status_codes_to_urls):
         # To slow down the program for readability of outputs
         time.sleep(SLEEP_FOR)
-
+        # print(to_url, status_code) # debug print
         if from_url == to_url:
             logger.warning(f'{from_url} == {to_url}')
             continue
 
         if not is_status_code_ok(to_url=to_url, status_code=status_code):
             to_final_url = ping.fetchURL(to_url)
-
+            # print(to_final_url) # debug print
             if to_final_url == from_url or to_final_url.rstrip('/') == from_url.rstrip('/'):
                 logger.warning(
                     f"Destination URL is redirected to source {to_url} -> {from_url}")
                 bad_urls.append((from_url, to_url))
             else:
-                print(f"Attention Required: {to_url}")
+                print(f"!!! Attention Required: {to_url}")
                 logger.warning(
                     f"Destination URL is redirecting further {to_final_url}")
     if bad_urls:
@@ -122,7 +124,7 @@ if __name__ == "__main__":
     from_final_urls = ping.getFinalURLs(
         map(lambda x: x[0], src_dest_urls))  # Passing source URLs
 
-    print("\nRunning Pre URL validations...")
+    print(f"\n{' Running Pre URL validations... ':{console_formatter}^{console_formatter_count}}")
     for (from_url, to_url), from_final_url in zip(src_dest_urls, from_final_urls):
         # To slow down the program for readability of outputs
         time.sleep(SLEEP_FOR)
@@ -139,13 +141,19 @@ if __name__ == "__main__":
     formatted_from_to_strings = defaultdict(list)
 
     for domain, index_list in domains_k_index.items():
-        domain_heading = f"For {urlparse(domain).netloc.split('.')[1].capitalize()}"
+        site_name: str = urlparse(domain).netloc.split('.')[1]
+        sites_colored: dict = {
+            "hotlink": colored("Hotlink", "white", "on_red", attrs=['bold'], force_color=True), 
+            "maxis": colored("Maxis", "white", "on_green", attrs=['bold'], force_color=True), 
+            "business": colored("Business", "white", "on_blue", attrs=['bold'], force_color=True)
+        }
+        domain_heading = f"For {sites_colored.get(site_name)}"
         print(f"\n{domain_heading}")
         for i in index_list:
             src, dest = src_dest_urls[i]
             formatted_src, formatted_dest = remove_prefix(src, domain), dest
             print(formatted_src, formatted_dest)
-            formatted_from_to_strings[domain_heading].append(
+            formatted_from_to_strings[site_name.capitalize()].append(
                 (formatted_src, formatted_dest))
 
     if any(formatted_from_to_strings):
