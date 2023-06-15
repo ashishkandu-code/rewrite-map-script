@@ -22,7 +22,20 @@ class Urls:
         """
         return self.src_dest_urls
     
+    def setSrcDestURLs(self, src_dest_url_json) -> None:
+        """
+        Sets urls from previous data stored in json format
+        to src_dest_url
+        This method also updates the total_found_urls count
+        """
+        urls = [(from_, to_) for from_, to_ in src_dest_url_json]
+        self.src_dest_urls = urls
+        self.total_found_urls: int = len(urls)
+    
     def increment_count(self, counter: int) -> int:
+        """
+        Function to increment counter
+        """
         counter = counter + 1
         return counter
     
@@ -36,9 +49,9 @@ class Urls:
         return [x[0] for x in urls]
 
 
-    def splitURLs(self, all_urls: List[str]):
+    def splitURLs(self, urls: List[str]):
         """Returns a dictionary of urls splitted in the from of From and To"""
-        total_urls = len(all_urls)
+        total_urls = len(urls)
         if total_urls < 2:
             logger.debug("Less than 2 valid urls received")
             return None
@@ -48,21 +61,30 @@ class Urls:
 
         # Checks if url is missing scheme, it will append the secure one
         for i in range(total_urls):
-            if all_urls[i].startswith("www"):
-                logger.debug(f"Prefixing scheme to {all_urls[i]}")
-                all_urls[i] = f"https://{all_urls[i]}"
-            # if not all_urls[i].endswith('/'):
-            #     logger.debug(f"Postfixing forward slash to {all_urls[i]}")
-            #     all_urls[i] = f"{all_urls[i]}/"
+            if urls[i].startswith("www"):
+                logger.debug(f"Prefixing scheme to {urls[i]}")
+                urls[i] = f"https://{urls[i]}"
+            # if not urls[i].endswith('/'):
+            #     logger.debug(f"Postfixing forward slash to {urls[i]}")
+            #     urls[i] = f"{urls[i]}/"
 
-        from_urls: List[str] = all_urls[::2]
-        to_urls: List[str] = all_urls[1::2]
+        from_urls: List[str] = urls[::2]
+        to_urls: List[str] = urls[1::2]
         urls = [(from_, to_) for from_, to_ in zip(from_urls, to_urls)]
         return urls
 
 
-    def remove_urls(self, from_to_entries):
-        for entry in from_to_entries:
+    def remove_urls(self, url_pairs: list[tuple]):
+        """
+        removes the url passed to the function from the src_dest_urls
+        """
+        for entry in url_pairs:
             self.src_dest_urls.remove(entry)
             self.removed_count = self.increment_count(self.removed_count)
             logger.debug(f"Removed {entry}")
+        
+    def add_success_counter(self):
+        self.success_counter += 1
+    
+    def add_failure_counter(self):
+        self.failed_count += 1

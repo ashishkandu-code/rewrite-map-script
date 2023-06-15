@@ -8,32 +8,43 @@ class Ping():
         self.message = "I'm a ping method"
 
 
-    def pingURL(self, url: str):
-        """Pings supplied url and returns status code"""
+    def get_response(self, url: str):
+        """
+        sends request to provided url and returns response with allow_redirects=False
+        """
         try:
             return requests.get(url, allow_redirects=False)
         except requests.exceptions.RequestException as err:
             raise SystemExit(err)
     
 
-    def fetchURL(self, url: str) -> str:
+    def get_URL(self, url: str) -> str:
+        """
+        send request to provided URL and returns landed url from response
+        """
         try:
-            res = requests.get(url).url
+            response = requests.get(url).url
             # port address may be returned, hence removing from here
-            url_port_split = res.split(":443")
-            res = "".join(url_port_split)
-            return res
+            url_port_split = response.split(":443")
+            response = "".join(url_port_split)
+            return response
         except requests.exceptions.RequestException as err:
             raise SystemExit(err)
         
 
-    def getFinalURLs(self, urls: List[str]):
+    def getFinalURLs(self, urls: List[str]) -> List[str]:
+        """
+        returns list of landed urls by sending request to all provided URLs
+        """
         with ThreadPoolExecutor() as executor:
-            results = executor.map(self.fetchURL, urls)
+            results = executor.map(self.get_URL, urls)
         return [result for result in results]
 
 
     def getStatusCodeOfURLs(self, urls: List[str]):
+        """
+        returns list of status codes by sending request to all provided
+        """
         with ThreadPoolExecutor() as executor:
-            results = executor.map(self.pingURL, urls)
+            results = executor.map(self.get_response, urls)
         return [response.status_code for response in results]
