@@ -1,6 +1,7 @@
 # All type files with below extensions
 *.log
 *.txt
+*.json
 
 # Directories
 __pycache__/
