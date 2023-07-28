@@ -36,7 +36,7 @@ if __name__ == "__main__":
     logger.info("URLs found...")
 
     while True:
-        choice = input("Do you want to add more URLs? (y/N): ")
+        choice = input("Do you want to add more URLs? (Y/n): ")
         if choice.lower() in positives:
             print(f'\n{" Copy the links... ":-^60}')
             pyperclip.copy("")
@@ -57,7 +57,7 @@ if __name__ == "__main__":
             with open(CACHE, "r") as cache:
                 data = json.load(cache)
             print(data[0][0], data[0][1], sep=" |-> ", end="\n...\n..\n.\n")
-            choice = input("Do you want to load the data? (y/N): ")
+            choice = input("Do you want to load the data? (Y/n): ")
             while True:
                 if choice.lower() in positives:
                     urls_obj.setSrcDestURLs(data)
@@ -66,7 +66,7 @@ if __name__ == "__main__":
                 if choice.lower() in negatives:
                     terminate()
                 else:
-                    choice = input("Please use y/N.. ")
+                    choice = input("Please use Y/n.. ")
     else:
         with open(CACHE, "w") as cache:
             json.dump(src_dest_urls, cache, indent=2)

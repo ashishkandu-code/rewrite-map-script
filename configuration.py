@@ -18,5 +18,5 @@ colorful_site_names: dict = {
     "Business": colored("Business", "white", "on_blue", attrs=['bold'], force_color=True)
 }
 
-positives = ('yes', 'y')
+positives = ('yes', 'y', '')
 negatives = ('no', 'n')
