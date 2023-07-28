@@ -7,6 +7,7 @@
 __pycache__/
 venv/
 .vscode
+archive/
 
 # play scripts
 test.py

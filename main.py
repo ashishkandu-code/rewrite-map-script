@@ -19,6 +19,8 @@ from processors import (
 )
 from configuration import FORMATTED_OUTPUT, FORMATTER_TIMES, FORMATTER_CHAR, SLEEP_FOR, CACHE, colorful_site_names, positives, negatives
 
+os.system('color')
+
 # set up logging configuration
 log_setup()
 logger = logging.getLogger(__name__)
@@ -29,10 +31,20 @@ if __name__ == "__main__":
     print(f'\n{" Copy the links... ":-^60}')
     pyperclip.copy("")
     clipboard_content = pyperclip.waitForNewPaste()
-    # pyperclip.copy(repr(clipboard_content))
     urls_obj = Urls(clipboard_content)
 
     logger.info("URLs found...")
+
+    while True:
+        choice = input("Do you want to add more URLs? (y/N): ")
+        if choice.lower() in positives:
+            print(f'\n{" Copy the links... ":-^60}')
+            pyperclip.copy("")
+            clipboard_content = pyperclip.waitForNewPaste()
+            urls_obj.add_more_urls(clipboard_content)
+        else:
+            break
+
     src_dest_urls = urls_obj.getSrcDestURLs()
 
     # the src_des_urls will be None if less than 2 valid urls supplied or paired urls not found
@@ -45,16 +57,16 @@ if __name__ == "__main__":
             with open(CACHE, "r") as cache:
                 data = json.load(cache)
             print(data[0][0], data[0][1], sep=" |-> ", end="\n...\n..\n.\n")
-            prompt = input("Do you want to load the data (Y/n) [defualt: Y]: ")
+            choice = input("Do you want to load the data? (y/N): ")
             while True:
-                if prompt.lower() in positives:
+                if choice.lower() in positives:
                     urls_obj.setSrcDestURLs(data)
                     src_dest_urls = urls_obj.getSrcDestURLs()
                     break
-                if prompt.lower() in negatives:
+                if choice.lower() in negatives:
                     terminate()
                 else:
-                    prompt = input("Please type Y/n.. ")
+                    choice = input("Please use y/N.. ")
     else:
         with open(CACHE, "w") as cache:
             json.dump(src_dest_urls, cache, indent=2)
@@ -141,7 +153,8 @@ if __name__ == "__main__":
                 pyperclip.copy(string)
                 print(
                     f"\n{colorful_site_names.get(domain_mapper.get(1))} copied!")
-                action = input("Continue? (Y/n): ")
+                action = input(
+                    "Do you want to continue to perform post validations? (Y/n): ")
                 if action.lower() in positives:
                     break
                 elif action.lower() in negatives:
