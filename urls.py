@@ -52,20 +52,20 @@ class Urls:
 
     def findURLs(self, string: str) -> List[str]:
         """Returns list of all urls found in the supplied string"""
-        logger.debug("Searching for URLs")
+        logger.info("Searching for URLs")
         regex = r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))"
         urls = re.findall(regex, string)
-        logger.debug(f"Found {len(urls)} URL(s)")
+        logger.info(f"Found {len(urls)} URL(s)")
         return [x[0] for x in urls]
 
     def splitURLs(self, urls: List[str]):
         """Returns a dictionary of urls splitted in the from of From and To"""
         total_urls = len(urls)
         if total_urls < 2:
-            logger.debug("Less than 2 valid urls received")
+            logger.critical("Less than 2 valid urls received")
             return []
         if total_urls % 2 != 0:
-            logger.debug("Found only {total_urls} URL(s)")
+            logger.critical(f"URLs pair mismatch: {total_urls} URL(s)")
             return []
 
         # Checks if url is missing scheme, it will append the secure one

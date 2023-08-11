@@ -32,4 +32,4 @@ handlers:
 
 root:
   level: DEBUG
-  handlers: [console]
+  handlers: [console, file_handler]

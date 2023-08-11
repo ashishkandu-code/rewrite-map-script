@@ -1,7 +1,9 @@
 import requests
+from urllib3.exceptions import InsecureRequestWarning
 from typing import List
 from concurrent.futures import ThreadPoolExecutor
 
+requests.packages.urllib3.disable_warnings(category=InsecureRequestWarning)
 
 class Ping():
     def __init__(self):
@@ -13,7 +15,7 @@ class Ping():
         sends request to provided url and returns response with allow_redirects=False
         """
         try:
-            return requests.get(url, allow_redirects=False)
+            return requests.get(url, allow_redirects=False, verify=False)
         except requests.exceptions.RequestException as err:
             raise SystemExit(err)
     
@@ -23,7 +25,7 @@ class Ping():
         send request to provided URL and returns landed url from response
         """
         try:
-            response = requests.get(url).url
+            response = requests.get(url, verify=False).url
             # port address may be returned, hence removing from here
             url_port_split = response.split(":443")
             response = "".join(url_port_split)
