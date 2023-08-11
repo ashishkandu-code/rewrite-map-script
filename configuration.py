@@ -1,12 +1,10 @@
-import os
+from pathlib import Path
 from termcolor import colored
 
 
 # Creation of path in the current script directory
-curr_path = os.path.dirname(os.path.realpath(__file__))
-FORMATTED_OUTPUT: str = os.path.join(
-    curr_path, "output.txt")  # save output directory
-CACHE: str = os.path.join(curr_path, "cache.json")  # cache directory
+FORMATTED_OUTPUT = Path.cwd().joinpath("output.txt") # save output directory
+CACHE = Path.cwd().joinpath("cache.json")  # cache directory
 FORMATTER_CHAR: str = "*"
 FORMATTER_TIMES: int = 70
 

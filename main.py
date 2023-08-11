@@ -53,10 +53,10 @@ if __name__ == "__main__":
         if not src_dest_urls:
             logger.critical(
                 "Valid URLs found were less than 2 or not enough to generate one-to-one pair")
-            if os.path.exists(CACHE):
+            if CACHE.exists:
                 logger.info(
                     "Found data from previous run, please check if this needs to be restored")
-                with open(CACHE, "r") as cache:
+                with CACHE.open(mode='r') as cache:
                     data = json.load(cache)
                 headers = ["Source", "Destination"]
                 print(tabulate(data, headers=headers, tablefmt='psql'))
@@ -73,7 +73,7 @@ if __name__ == "__main__":
                     else:
                         choice = input("Please use Y/n.. ")
         else:
-            with open(CACHE, "w") as cache:
+            with CACHE.open(mode='w') as cache:
                 json.dump(src_dest_urls, cache, indent=2)
 
         ping = Ping()
@@ -199,7 +199,7 @@ if __name__ == "__main__":
             # Creates file for writitng console output
             create_file_if_not_exist(FORMATTED_OUTPUT)
             today = datetime.now()
-            with open(FORMATTED_OUTPUT, 'a') as output_file:
+            with FORMATTED_OUTPUT.open(mode='a') as output_file:
                 output_file.write(f"#{today.strftime('%d/%m/%Y, %H:%M:%S')}\n")
                 for domain, src_dest_url in formatted_from_to_strings.items():
                     output_file.write(f"[{domain}]\n")
@@ -225,7 +225,7 @@ if __name__ == "__main__":
                     urls_obj.add_failure_counter()
 
         # Program ends, little summary section
-        print(f"\n{'-'* (len(FORMATTED_OUTPUT)+13)}\nOutput file: {FORMATTED_OUTPUT}")
+        print(f"\n{'-'* (len(str(FORMATTED_OUTPUT))+13)}\nOutput file: {FORMATTED_OUTPUT}")
         print(f'\nSummary')
         print(f'{"Bad URLs removed": <20}: {urls_obj.removed_count}')
         print(f'{"URLs redirected": <20}: {urls_obj.success_count}')
